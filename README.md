@@ -31,9 +31,11 @@
 ![imsky-homepage-dark](https://imsky.exmay.com/docs/images/imsky_homepage_dark.png)
 <br />
 
-<!--
 ### 企业版截图
--->
+#### 📱 移动端
+<p align="center">
+  <img src="https://imsky.exmay.com/docs/images/imsky_homepage_app.png" alt="imsky-homepage-app">
+</p>
 
 <!--
 ### ✨ 核心特性
