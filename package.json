@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "description": "ImSky 天信IM 跨平台即时通讯解决方案",
   "author": "GitCoffee Team @GitCoffee",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gitcoffee-os/imsky.git"
+  },
+  "homepage": "https://github.com/gitcoffee-os/imsky#readme",
+  "bugs": {
+    "url": "https://github.com/gitcoffee-os/imsky/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -14,8 +23,8 @@
     "@gitcoffee/app": "^1.0.0",
     "@gitcoffee/icons": "^1.0.0",
     "@gitcoffee/api": "^1.0.0",
-    "@gitcoffee/im-ui": "^1.0.0",
-    "@gitcoffee/im-utils": "^1.0.0",
+    "@gitcoffee/im-ui": "workspace:*",
+    "@gitcoffee/im-utils": "workspace:*",
     "@gitcoffee/i18n": "^1.0.0",
     "@gitcoffee/plugin-ui": "^1.0.0",
     "@gitcoffee/plugins": "^1.0.0",
@@ -23,6 +32,9 @@
     "@gitcoffee/store": "^1.0.0",
     "@gitcoffee/theme-ui": "^1.0.0",
     "@gitcoffee/design-ui": "^1.0.0",
+    "@gitcoffee/chatbot-ui": "^1.0.0",
+    "ant-design-vue": "^4.x",
+    "@ant-design/icons-vue": "^7.x",
     "pinia": "^3.0.4",
     "vue": "^3.5.26",
     "vue-i18n": "^11.2.8",
@@ -41,6 +53,5 @@
     "chat",
     "instant-messaging",
     "cross-platform"
-  ],
-  "license": "Apache-2.0"
+  ]
 }

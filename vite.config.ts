@@ -52,6 +52,7 @@ export default defineConfig(({ mode }) => {
         input: {
           main: resolve(__dirname, 'index.html')
         },
+        external: ['@ant-design/icons-vue'],
         output: {
           assetFileNames: 'assets/[name]-[hash][extname]',
           chunkFileNames: 'assets/[name]-[hash].js',
@@ -66,6 +67,9 @@ export default defineConfig(({ mode }) => {
             i18n: ['vue-i18n'],
             // 将 UI 组件打包到单独的 chunk
             ui: ['@gitcoffee/im-ui', '@gitcoffee/design-ui']
+          },
+          globals: {
+            '@ant-design/icons-vue': 'IconsVue'
           }
         }
       },
@@ -82,9 +86,8 @@ export default defineConfig(({ mode }) => {
         ignored: ['**/node_modules/**', '**/dist/**']
       },
       proxy: {
-        // 配置 IM API 的代理
         '/api/im': {
-          target: 'https://imsky.exmay.com',
+          target: process.env.VITE_APP_API_TARGET || 'https://imsky.example.com',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api\/im/, '/api'),
           secure: false

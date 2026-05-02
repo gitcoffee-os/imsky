@@ -1,0 +1,56 @@
+{
+  "appName": "ImSky 天信IM",
+  "chat": "聊天",
+  "contact": "通讯录",
+  "settings": "设置",
+  "search": "搜索",
+  "send": "发送",
+  "cancel": "取消",
+  "confirm": "确认",
+  "delete": "删除",
+  "edit": "编辑",
+  "save": "保存",
+  "close": "关闭",
+  "more": "更多",
+  "back": "返回",
+  "loading": "加载中...",
+  "noData": "暂无数据",
+  "online": "在线",
+  "offline": "离线",
+  "busy": "忙碌",
+  "away": "离开",
+  "login": {
+    "prompt": "需要登录",
+    "confirm": "请先登录后再进行操作，是否前往登录页面？"
+  },
+  "message": {
+    "placeholder": "请输入消息...",
+    "sendHint": "按 Enter 发送，Shift + Enter 换行"
+  },
+  "session": {
+    "title": "消息",
+    "empty": "暂无会话",
+    "top": "置顶",
+    "mute": "静音",
+    "delete": "删除会话",
+    "clear": "清空消息"
+  },
+  "contact": {
+    "title": "通讯录",
+    "newFriends": "新的朋友",
+    "groups": "群聊",
+    "tags": "标签",
+    "search": "搜索联系人"
+  },
+  "call": {
+    "audio": "语音通话",
+    "video": "视频通话",
+    "calling": "正在呼叫...",
+    "ringing": "来电",
+    "connected": "通话中",
+    "ended": "通话结束",
+    "accept": "接听",
+    "reject": "拒绝",
+    "hangup": "挂断"
+  }
+}
