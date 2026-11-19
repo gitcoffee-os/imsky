@@ -15,7 +15,7 @@
  */
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { User, ContactGroup } from '@gitcoffee/im-ui';
+import type { User, ContactGroup } from '@gitcoffee-os/im-ui';
 
 export const useContactStore = defineStore('contact', () => {
   const contacts = ref<User[]>([]);

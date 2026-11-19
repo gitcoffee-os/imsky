@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { registerLanguageMessages } from '@gitcoffee/i18n';
+import { registerLanguageMessages } from '@gitcoffee-os/i18n';
 
 import zhCommon from './zh/common.json';
 import enCommon from './en/common.json';

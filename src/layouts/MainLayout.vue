@@ -303,7 +303,7 @@ import {
   LockOutlined,
   InfoCircleOutlined
 } from '@ant-design/icons-vue';
-import { ImLayout, CallWindow } from '@gitcoffee/im-ui';
+import { ImLayout, CallWindow } from '@gitcoffee-os/im-ui';
 import { useChatStore, useCallStore, useSettingsStore } from '../stores';
 import { APP_URLS } from '../config/config';
 import { message } from 'ant-design-vue';

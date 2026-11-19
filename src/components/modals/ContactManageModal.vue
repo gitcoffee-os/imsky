@@ -286,7 +286,7 @@ import {
   EditOutlined,
   PlusOutlined
 } from '@ant-design/icons-vue';
-import { EmptyState } from '@gitcoffee/im-ui';
+import { EmptyState } from '@gitcoffee-os/im-ui';
 import { message } from 'ant-design-vue';
 
 interface Tag {

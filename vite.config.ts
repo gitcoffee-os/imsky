@@ -66,7 +66,7 @@ export default defineConfig(({ mode }) => {
             // 将国际化相关代码打包到单独的 chunk
             i18n: ['vue-i18n'],
             // 将 UI 组件打包到单独的 chunk
-            ui: ['@gitcoffee/im-ui', '@gitcoffee/design-ui']
+            ui: ['@gitcoffee-os/im-ui', '@gitcoffee-os/design-ui']
           },
           globals: {
             '@ant-design/icons-vue': 'IconsVue'

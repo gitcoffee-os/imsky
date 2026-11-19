@@ -159,7 +159,7 @@
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { SearchOutlined, UserOutlined, FileOutlined } from '@ant-design/icons-vue';
-import { debounce } from '@gitcoffee/im-utils';
+import { debounce } from '@gitcoffee-os/im-utils';
 
 interface ContactResult {
   id: string;

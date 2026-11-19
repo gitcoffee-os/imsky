@@ -125,7 +125,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { SearchOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons-vue';
-import { EmptyState } from '@gitcoffee/im-ui';
+import { EmptyState } from '@gitcoffee-os/im-ui';
 
 interface FriendRequest {
   id: string;

@@ -1030,6 +1030,180 @@
     </div>
   </div>
 
+  <!-- S6: 通话浮窗（最小化时显示） -->
+  <div v-show="isMinimized && callState !== 'idle'" class="call-floating" @click="toggleMinimize">
+    <div class="call-floating-avatar">
+      <img :src="callPeer?.avatar" :alt="callPeer?.name" />
+    </div>
+    <div class="call-floating-info">
+      <div class="call-floating-name">{{ callPeer?.name }}</div>
+      <div class="call-floating-duration">{{ formatCallDuration(callDuration) }}</div>
+    </div>
+    <div class="call-floating-controls">
+      <a-button type="text" size="small" class="call-floating-btn" @click.stop="toggleMute">
+        <AudioOutlined v-if="isMuted" /> <AudioOutlined v-else />
+      </a-button>
+      <a-button type="text" size="small" class="call-floating-btn" @click.stop="hangupCall">
+        <PhoneOutlined />
+      </a-button>
+    </div>
+  </div>
+
+  <!-- S6: 来电弹窗 -->
+  <a-modal
+    :open="callState === 'ringing'"
+    :maskClosable="false"
+    :closable="false"
+    :centered="true"
+    :footer="null"
+    :width="400"
+    @cancel="rejectCall"
+  >
+    <div class="incoming-call-modal">
+      <div class="incoming-call-avatar">
+        <img :src="callPeer?.avatar" :alt="callPeer?.name" />
+      </div>
+      <div class="incoming-call-name">{{ callPeer?.name }}</div>
+      <div class="incoming-call-type">
+        <VideoCameraOutlined v-if="callMode === 'video'" /> <AudioOutlined v-else />
+        <span>{{ callMode === 'video' ? '视频来电' : '语音来电' }}</span>
+      </div>
+      <div class="incoming-call-actions">
+        <a-button type="default" size="large" @click="rejectCall" class="incoming-btn reject">
+          <PhoneOutlined /> 拒绝
+        </a-button>
+        <a-button type="primary" size="large" @click="acceptCall" class="incoming-btn accept">
+          <VideoCameraOutlined v-if="callMode === 'video'" /> <AudioOutlined v-else />
+          接听
+        </a-button>
+      </div>
+    </div>
+  </a-modal>
+
+  <!-- S6: 通话中弹窗 -->
+  <a-modal
+    :open="callState === 'connected'"
+    :maskClosable="false"
+    :closable="false"
+    :centered="true"
+    :footer="null"
+    :width="500"
+    @cancel="hangupCall"
+  >
+    <div class="active-call-modal">
+      <div class="active-call-header">
+        <div class="active-call-peer">
+          <img :src="callPeer?.avatar" :alt="callPeer?.name" class="active-call-avatar" />
+          <div>
+            <div class="active-call-name">{{ callPeer?.name }}</div>
+            <div class="active-call-duration">{{ formatCallDuration(callDuration) }}</div>
+          </div>
+        </div>
+        <a-button type="text" size="small" @click="toggleMinimize">
+          <ShrinkOutlined />
+        </a-button>
+      </div>
+
+      <div class="active-call-video">
+        <video
+          ref="localVideoRef"
+          class="local-video"
+          auto-play
+          muted
+          plays-inline
+        />
+        <video
+          ref="remoteVideoRef"
+          class="remote-video"
+          auto-play
+          plays-inline
+        />
+      </div>
+
+      <div class="active-call-controls">
+        <a-button
+          type="text"
+          size="large"
+          :danger="isMuted"
+          @click="toggleMute"
+          class="control-btn"
+        >
+          <AudioOutlined v-if="isMuted" /> <AudioOutlined v-else />
+          <span>{{ isMuted ? '取消静音' : '静音' }}</span>
+        </a-button>
+
+        <a-button
+          type="text"
+          size="large"
+          :danger="!isSpeaker"
+          @click="toggleSpeaker"
+          class="control-btn"
+        >
+          <SoundOutlined v-if="isSpeaker" /> <CustomerServiceOutlined v-else />
+          <span>{{ isSpeaker ? '听筒' : '免提' }}</span>
+        </a-button>
+
+        <a-button
+          type="text"
+          size="large"
+          :danger="isCameraOff"
+          @click="toggleCamera"
+          class="control-btn"
+        >
+          <VideoCameraOutlined v-if="!isCameraOff" /> <VideoCameraAddOutlined v-else />
+          <span>{{ isCameraOff ? '开启摄像头' : '关闭摄像头' }}</span>
+        </a-button>
+
+        <a-button
+          type="text"
+          size="large"
+          @click="toggleMinimize"
+          class="control-btn"
+        >
+          <ShrinkOutlined />
+          <span>最小化</span>
+        </a-button>
+
+        <a-button
+          type="text"
+          size="large"
+          danger
+          @click="hangupCall"
+          class="control-btn hangup-btn"
+        >
+          <PhoneOutlined />
+          <span>挂断</span>
+        </a-button>
+      </div>
+    </div>
+  </a-modal>
+
+  <!-- S6: 呼叫中弹窗 -->
+  <a-modal
+    :open="callState === 'calling'"
+    :maskClosable="false"
+    :closable="false"
+    :centered="true"
+    :footer="null"
+    :width="400"
+    @cancel="cancelCall"
+  >
+    <div class="outgoing-call-modal">
+      <div class="outgoing-call-avatar">
+        <img :src="callPeer?.avatar" :alt="callPeer?.name" />
+      </div>
+      <div class="outgoing-call-name">{{ callPeer?.name }}</div>
+      <div class="outgoing-call-status">
+        <VideoCameraOutlined v-if="callMode === 'video'" /> <AudioOutlined v-else />
+        <span>正在呼叫... {{ callMode === 'video' ? '视频' : '语音' }}</span>
+      </div>
+      <div class="outgoing-call-duration">{{ formatCallDuration(callDuration) }}</div>
+      <a-button type="default" size="large" danger @click="cancelCall" class="outgoing-cancel-btn">
+        <PhoneOutlined /> 取消
+      </a-button>
+    </div>
+  </a-modal>
+
   <!-- 添加好友弹窗 -->
   <AddFriendModal
     :visible="addFriendModalVisible"
@@ -1103,9 +1277,18 @@ import {
 import { message as antMessage } from 'ant-design-vue';
 import { useChatStore, useCallStore } from '../../stores';
 import { APP_URLS } from '../../config/config';
-import { im } from '@gitcoffee/api';
+import { im } from '@gitcoffee-os/api';
 import AddFriendModal from '../../components/modals/AddFriendModal.vue';
-import { Chatbot } from '@gitcoffee/chatbot-ui';
+import { Chatbot } from '@gitcoffee-os/chatbot-ui';
+
+// S6: 真实 IM 通话相关导入
+import { isImReal, initIm, getIm } from '../../im/bootstrap';
+import { targetFromMessage } from '@exmay/im';
+import type { ChatTarget } from '@exmay/im';
+import {
+  ShrinkOutlined,
+  VideoCameraAddOutlined
+} from '@ant-design/icons-vue';
 
 // API functions available for future use
 // const { getSessionListApi, getMessageListApi, sendMessageApi } = im;
@@ -2189,7 +2372,276 @@ const unreadCount = computed(() => sessions.value.filter(s => s.unread > 0).leng
 const groupCount = computed(() => sessions.value.filter(s => s.isGroup).length);
 const totalUnreadCount = computed(() => sessions.value.reduce((sum, s) => sum + s.unread, 0));
 
-// 是否为特殊类型会话（系统通知、资讯、邮箱、机器人）- 文件传输助手支持聊天
+// ==================== S6 通话相关状态 ====================
+const callState = ref<'idle' | 'calling' | 'ringing' | 'connected' | 'ended'>('idle');
+const callMode = ref<'audio' | 'video'>('audio');
+const callPeer = ref<{ userId: string; name: string; avatar: string } | null>(null);
+const callDuration = ref(0);
+const callTimer = ref<number | null>(null);
+const localStream = ref<MediaStream | null>(null);
+const remoteStream = ref<MediaStream | null>(null);
+const localVideoRef = ref<HTMLVideoElement | null>(null);
+const remoteVideoRef = ref<HTMLVideoElement | null>(null);
+const isMuted = ref(false);
+const isSpeaker = ref(false);
+const isCameraOff = ref(false);
+const isMinimized = ref(false);
+const callStartTime = ref<number | null>(null);
+
+// 格式化通话时长
+const formatCallDuration = (ms: number): string => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+};
+
+// 开始计时器
+const startCallTimer = (): void => {
+  callStartTime.value = Date.now();
+  callTimer.value = window.setInterval(() => {
+    if (callStartTime.value) {
+      callDuration.value = Date.now() - callStartTime.value;
+    }
+  }, 1000);
+};
+
+// 停止计时器
+const stopCallTimer = (): void => {
+  if (callTimer.value) {
+    clearInterval(callTimer.value);
+    callTimer.value = null;
+  }
+};
+
+// 重置通话状态
+const resetCallState = (): void => {
+  callState.value = 'idle';
+  callPeer.value = null;
+  callDuration.value = 0;
+  stopCallTimer();
+  callStartTime.value = null;
+  localStream.value = null;
+  remoteStream.value = null;
+  isMuted.value = false;
+  isSpeaker.value = false;
+  isCameraOff.value = false;
+  isMinimized.value = false;
+};
+
+// 切换静音
+const toggleMute = (): void => {
+  isMuted.value = !isMuted.value;
+  const im = getIm();
+  if (im) {
+    im.client.call.setMuted(isMuted.value);
+  }
+};
+
+// 切换免提
+const toggleSpeaker = (): void => {
+  isSpeaker.value = !isSpeaker.value;
+  const im = getIm();
+  if (im) {
+    im.client.call.setSpeaker(isSpeaker.value);
+  }
+};
+
+// 切换摄像头
+const toggleCamera = async (): Promise<void> => {
+  isCameraOff.value = !isCameraOff.value;
+  const im = getIm();
+  if (im) {
+    await im.client.call.switchCamera();
+  }
+};
+
+// 切换最小化
+const toggleMinimize = (): void => {
+  isMinimized.value = !isMinimized.value;
+};
+
+// 关闭通话浮窗
+const closeCallFloating = (): void => {
+  const im = getIm();
+  if (im && callState.value === 'connected') {
+    im.client.call.hangup();
+  }
+  resetCallState();
+};
+
+// 拨打电话
+const placeCall = async (mode: 'audio' | 'video', peer: { userId: string; name: string; avatar: string }): Promise<void> => {
+  if (!isImReal()) {
+    antMessage.info('通话功能需开启 VITE_IM_REAL=1');
+    return;
+  }
+  const im = getIm() ?? initIm();
+  if (!im) return;
+
+  const selfUid = currentUser.value.id;
+  im.setSelfUid(selfUid);
+
+  callMode.value = mode;
+  callPeer.value = peer;
+  callState.value = 'calling';
+  startCallTimer();
+
+  try {
+    const target: ChatTarget = {
+      kind: 'private',
+      userId: peer.userId,
+    };
+    await im.client.call.place(mode, {
+      kind: 'private',
+      userId: peer.userId,
+      nickName: peer.name,
+      avatarUrl: peer.avatar,
+    });
+    callState.value = 'calling';
+  } catch (error) {
+    console.error('拨打失败:', error);
+    antMessage.error('拨打失败，请重试');
+    resetCallState();
+  }
+};
+
+// 接听来电
+const acceptCall = async (): Promise<void> => {
+  const im = getIm();
+  if (!im) return;
+
+  try {
+    await im.client.call.accept();
+    callState.value = 'connected';
+    startCallTimer();
+  } catch (error) {
+    console.error('接听失败:', error);
+    antMessage.error('接听失败');
+    resetCallState();
+  }
+};
+
+// 拒绝来电
+const rejectCall = async (): Promise<void> => {
+  const im = getIm();
+  if (!im) return;
+
+  try {
+    await im.client.call.reject();
+  } catch (error) {
+    console.error('拒绝失败:', error);
+  }
+  resetCallState();
+};
+
+// 挂断电话
+const hangupCall = async (): Promise<void> => {
+  const im = getIm();
+  if (!im) {
+    resetCallState();
+    return;
+  }
+
+  try {
+    await im.client.call.hangup();
+  } catch (error) {
+    console.error('挂断失败:', error);
+  }
+  resetCallState();
+};
+
+// 取消拨打
+const cancelCall = async (): Promise<void> => {
+  const im = getIm();
+  if (!im) {
+    resetCallState();
+    return;
+  }
+
+  try {
+    await im.client.call.cancel();
+  } catch (error) {
+    console.error('取消失败:', error);
+  }
+  resetCallState();
+};
+
+// 监听通话事件
+onMounted(() => {
+  if (isImReal()) {
+    const im = getIm() ?? initIm();
+    if (im) {
+      // 监听来电
+      im.client.on('call:incoming', (call: any) => {
+        if (callState.value !== 'idle') {
+          // 忙线，自动拒绝
+          im.client.call.reject();
+          return;
+        }
+        callMode.value = call.mode;
+        callPeer.value = {
+          userId: call.peerId,
+          name: call.peerName || '未知',
+          avatar: call.peerAvatar || '',
+        };
+        callState.value = 'ringing';
+        callStartTime.value = Date.now();
+      });
+
+      // 监听通话状态变化
+      im.client.on('call:state', ({ state, call }: any) => {
+        if (state === 'connected' && callState.value !== 'connected') {
+          callState.value = 'connected';
+          startCallTimer();
+        } else if (['ended', 'timeout', 'busy'].includes(state)) {
+          if (state === 'busy') {
+            antMessage.warning('对方正忙');
+          } else if (state === 'timeout') {
+            antMessage.info('通话超时');
+          }
+          resetCallState();
+        }
+      });
+
+      // 监听通话错误
+      im.client.on('error', (error: any) => {
+        if (error.code?.startsWith('CALL_')) {
+          console.error('通话错误:', error);
+          antMessage.error('通话异常: ' + error.message);
+          resetCallState();
+        }
+      });
+    }
+  }
+
+  // 恢复会话
+  const sessionId = route.params.sessionId as string;
+  if (sessionId) {
+    chatStore.setCurrentSession(sessionId);
+  }
+});
+
+// 更新 handleAudioCall 和 handleVideoCall
+const handleAudioCall = () => {
+  if (!currentSession.value) return;
+  const peer = {
+    userId: currentSession.value.senderId || currentSession.value.id,
+    name: currentSession.value.title,
+    avatar: currentSession.value.avatar,
+  };
+  placeCall('audio', peer);
+};
+
+const handleVideoCall = () => {
+  if (!currentSession.value) return;
+  const peer = {
+    userId: currentSession.value.senderId || currentSession.value.id,
+    name: currentSession.value.title,
+    avatar: currentSession.value.avatar,
+  };
+  placeCall('video', peer);
+};
 const isSpecialSession = computed(() => {
   const specialTypes: SessionType[] = ['system', 'news', 'email', 'robot'];
   return currentSession.value && specialTypes.includes(currentSession.value.sessionType);
@@ -2352,16 +2804,6 @@ const handleSendMessage = () => {
       messageListRef.value.scrollTop = messageListRef.value.scrollHeight;
     }
   }, 0);
-};
-
-const handleAudioCall = () => {
-  if (!currentSession.value) return;
-  antMessage.info('语音通话功能开发中');
-};
-
-const handleVideoCall = () => {
-  if (!currentSession.value) return;
-  antMessage.info('视频通话功能开发中');
 };
 
 // 消息右键菜单
@@ -5441,4 +5883,394 @@ const handleAssistantChatbotMessage = async (data: { content: string; tags: stri
 .quick-buttons .ant-btn {
   border-radius: 16px;
 }
+
+/* ==================== S6 通话样式 ==================== */
+
+/* 通话浮窗（最小化时） */
+.call-floating {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  z-index: 9999;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+}
+
+.call-floating:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.call-floating-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.call-floating-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.call-floating-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.call-floating-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1f1f1f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.call-floating-duration {
+  font-size: 11px;
+  color: #8c8c8c;
+  font-variant-numeric: tabular-nums;
+}
+
+.call-floating-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.call-floating-btn {
+  padding: 4px 8px !important;
+  height: auto !important;
+}
+
+.call-floating-btn .anticon {
+  font-size: 14px;
+}
+
+/* 来电弹窗 */
+.incoming-call-modal {
+  padding: 24px;
+  text-align: center;
+}
+
+.incoming-call-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 16px;
+  border: 3px solid #e8f5e9;
+}
+
+.incoming-call-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.incoming-call-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin-bottom: 8px;
+}
+
+.incoming-call-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #595959;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.incoming-call-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.incoming-btn {
+  min-width: 100px;
+}
+
+.incoming-btn .anticon {
+  margin-right: 6px;
+}
+
+.incoming-btn.reject {
+  border-color: #ff7875;
+  color: #ff4d4f;
+}
+
+.incoming-btn.reject:hover {
+  background: #fff1f0;
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+}
+
+.incoming-btn.accept {
+  background: #52c41a;
+  border-color: #52c41a;
+}
+
+.incoming-btn.accept:hover {
+  background: #389e0d;
+  border-color: #389e0d;
+}
+
+/* 通话中弹窗 */
+.active-call-modal {
+  padding: 0;
+  overflow: hidden;
+}
+
+.active-call-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.active-call-peer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.active-call-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.active-call-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.active-call-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.active-call-duration {
+  font-size: 13px;
+  color: #8c8c8c;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+.active-call-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.local-video {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 120px;
+  height: 90px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.active-call-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px !important;
+  height: 44px !important;
+  border-radius: 22px !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.control-btn .anticon {
+  font-size: 16px;
+}
+
+.control-btn:hover {
+  transform: scale(1.05);
+}
+
+.control-btn.hangup-btn {
+  background: #fff1f0;
+  border-color: #ff7875;
+  color: #ff4d4f;
+}
+
+.control-btn.hangup-btn:hover {
+  background: #ff4d4f;
+  border-color: #ff4d4f;
+  color: #fff;
+}
+
+.hangup-btn {
+  background: #ff4d4f !important;
+  border-color: #ff4d4f !important;
+  color: #fff !important;
+}
+
+/* 呼叫中弹窗 */
+.outgoing-call-modal {
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.outgoing-call-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 16px;
+  border: 3px solid #e8f5e9;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(82, 196, 26, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0);
+  }
+}
+
+.outgoing-call-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.outgoing-call-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin-bottom: 8px;
+}
+
+.outgoing-call-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #52c41a;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.outgoing-call-duration {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f1f1f;
+  font-variant-numeric: tabular-nums;
+  font-family: 'Monospace', monospace;
+  margin-bottom: 24px;
+}
+
+.outgoing-cancel-btn {
+  min-width: 120px;
+}
+
+/* 响应式调整 */
+@media (max-width: 576px) {
+  .call-floating {
+    bottom: 90px;
+    right: 16px;
+    left: 16px;
+    justify-content: center;
+  }
+
+  .call-floating-info {
+    display: none;
+  }
+
+  .active-call-controls {
+    gap: 8px;
+  }
+
+  .control-btn {
+    padding: 0 12px !important;
+    height: 40px !important;
+  }
+
+  .control-btn span {
+    display: none;
+  }
+
+  .local-video {
+    width: 80px;
+    height: 60px;
+    bottom: 12px;
+    right: 12px;
+  }
+}
+
+/* 视频元素样式 */
+video.local-video,
+video.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
+/* 模态框内容区域 */
+:deep(.ant-modal-content) {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+:deep(.ant-modal-header) {
+  display: none;
+}
+
+:deep(.ant-modal-body) {
+  padding: 0;
+}
+
+:deep(.ant-modal-close) {
+  display: none;
+}
+
 </style>

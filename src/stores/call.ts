@@ -15,7 +15,7 @@
  */
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { CallSession, CallType, CallStatus, User } from '@gitcoffee/im-ui';
+import type { CallSession, CallType, CallStatus, User } from '@gitcoffee-os/im-ui';
 
 export const useCallStore = defineStore('call', () => {
   const currentCall = ref<CallSession | null>(null);

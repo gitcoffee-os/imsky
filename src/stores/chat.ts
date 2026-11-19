@@ -15,7 +15,7 @@
  */
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { Session, Message } from '@gitcoffee/im-ui';
+import type { Session, Message } from '@gitcoffee-os/im-ui';
 
 export const useChatStore = defineStore('chat', () => {
   const sessions = ref<Session[]>([]);

@@ -24,7 +24,7 @@
 </template>
 
 <style>
-@import '@gitcoffee/theme-ui/ai.css';
+@import '@gitcoffee-os/theme-ui/ai.css';
 @import './styles/global.css';
 </style>
 
@@ -36,7 +36,7 @@ import {
   useTheme, 
   useAntdLocale, 
   useAppInitialization 
-} from '@gitcoffee/app';
+} from '@gitcoffee-os/app';
 import Watermark from './components/Watermark.vue';
 
 const settingsStore = useSettingsStore();

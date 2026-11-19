@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import '@gitcoffee/design-ui';
-import '@gitcoffee/theme-ui/ai.css';
+import '@gitcoffee-os/design-ui';
+import '@gitcoffee-os/theme-ui/ai.css';
 import App from './App.vue';
 import './locales';
-import '@gitcoffee/chatbot-ui'; // 导入chatbot-ui以注册其国际化语言包
+import '@gitcoffee-os/chatbot-ui'; // 导入chatbot-ui以注册其国际化语言包
 import router from './router';
 import { APP_ID, BASE_URL } from './config/config';
-import { initApp } from '@gitcoffee/app';
+import { initApp } from '@gitcoffee-os/app';
 import { useSettingsStore } from './stores';
 import { registerAntdvComponents } from './components/antdv.register';
 

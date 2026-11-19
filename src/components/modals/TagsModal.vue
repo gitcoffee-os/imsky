@@ -187,7 +187,7 @@ import {
   TeamOutlined,
   UserOutlined
 } from '@ant-design/icons-vue';
-import { EmptyState } from '@gitcoffee/im-ui';
+import { EmptyState } from '@gitcoffee-os/im-ui';
 
 interface Tag {
   id: string;

@@ -115,7 +115,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { UserOutlined, LikeOutlined, MessageOutlined, PlusOutlined } from '@ant-design/icons-vue';
-import { MomentPublishModal } from '@gitcoffee/im-ui';
+import { MomentPublishModal } from '@gitcoffee-os/im-ui';
 
 interface Moment {
   id: string;

@@ -228,10 +228,10 @@ import {
   FileTextOutlined,
   LikeOutlined
 } from '@ant-design/icons-vue';
-import { ContactList, EmptyState, MomentItem, MomentDetailModal } from '@gitcoffee/im-ui';
-import type { User, Moment, Comment, Like } from '@gitcoffee/im-ui';
+import { ContactList, EmptyState, MomentItem, MomentDetailModal } from '@gitcoffee-os/im-ui';
+import type { User, Moment, Comment, Like } from '@gitcoffee-os/im-ui';
 import { useContactStore, useCallStore, useChatStore } from '../../stores';
-import { im } from '@gitcoffee/api';
+import { im } from '@gitcoffee-os/api';
 import NewFriendsModal from '../../components/modals/NewFriendsModal.vue';
 import GroupChatsModal from '../../components/modals/GroupChatsModal.vue';
 import TagsModal from '../../components/modals/TagsModal.vue';
