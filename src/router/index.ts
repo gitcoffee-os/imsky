@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 import { createRouter, createWebHistory } from 'vue-router';
-import MainLayout from '../layouts/MainLayout.vue';
-import Chat from '../views/chat/Chat.vue';
-import Contact from '../views/contact/Contact.vue';
-import Settings from '../views/settings/Settings.vue';
-import Favorite from '../views/favorite/Favorite.vue';
+import {
+  ImSkyMainLayout,
+  ImskyChat,
+  ImskyContact,
+  ImskyFavorite,
+  ImskySettings,
+  ImskyLogin,
+  ImskyRegister,
+  ImskyForgotPassword
+} from '@gitcoffee-os/imsky-ui';
 
 const routes = [
   {
     path: '/',
-    component: MainLayout,
+    component: ImSkyMainLayout,
     children: [
       {
         path: '',
@@ -32,29 +37,44 @@ const routes = [
       {
         path: 'chat',
         name: 'Chat',
-        component: Chat
+        component: ImskyChat
       },
       {
         path: 'chat/:sessionId',
         name: 'ChatSession',
-        component: Chat
+        component: ImskyChat
       },
       {
         path: 'contact',
         name: 'Contact',
-        component: Contact
+        component: ImskyContact
       },
       {
         path: 'favorite',
         name: 'Favorite',
-        component: Favorite
+        component: ImskyFavorite
       },
       {
         path: 'settings',
         name: 'Settings',
-        component: Settings
+        component: ImskySettings
       }
     ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: ImskyLogin
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: ImskyRegister
+  },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ImskyForgotPassword
   }
 ];
 

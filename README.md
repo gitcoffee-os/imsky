@@ -3,7 +3,7 @@
 </p>
 <div align="center">
   <br />
-  <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">💬 ImSky 天信IM 跨平台即时通讯解决方案 v1.0.0</h1>
+  <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">💬 ImSky 天信IM 跨平台即时通讯解决方案 v1.1.0</h1>
   <h3>即时连接，无限可能！沟通无界，协作无间！企业级即时通讯新引擎！</h3>
   <p>💬 多端消息同步 • 📞 音视频通话 • 👥 群聊协作 • 🔒 安全加密 • 🌐 跨平台支持</p>
 </div>
@@ -29,6 +29,8 @@
 ![imsky-homepage](https://imsky.exmay.com/docs/images/imsky_homepage.png)
 <br />
 ![imsky-homepage-dark](https://imsky.exmay.com/docs/images/imsky_homepage_dark.png)
+<br />
+![imsky](https://imsky.exmay.com/docs/images/imsky.gif)
 <br />
 
 ### 企业版截图

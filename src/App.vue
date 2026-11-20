@@ -19,25 +19,26 @@
       <router-view />
     </a-config-provider>
     <!-- 水印组件 -->
-    <Watermark />
+    <ImskyWatermark />
+    <!-- 通用调试面板（仅 dev 环境渲染） -->
+    <DebugPanel />
   </div>
 </template>
 
 <style>
 @import '@gitcoffee-os/theme-ui/ai.css';
-@import './styles/global.css';
+@import '@gitcoffee-os/imsky-ui/styles';
 </style>
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useSettingsStore } from './stores';
+import { useSettingsStore, ImskyWatermark } from '@gitcoffee-os/imsky-ui';
 import { APP_SETTING } from './config/config';
-import { 
-  useTheme, 
-  useAntdLocale, 
-  useAppInitialization 
+import {
+  useTheme,
+  useAntdLocale,
+  useAppInitialization
 } from '@gitcoffee-os/app';
-import Watermark from './components/Watermark.vue';
 
 const settingsStore = useSettingsStore();
 
